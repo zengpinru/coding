@@ -84,3 +84,21 @@ function intersection(...list) {
   });
   return [...new Set(res)];
 }
+
+
+/**
+ * 根据每个对象的某一个具体属性来进行去重
+ * @param {object[]} arr
+ * @param {string} property 
+ */
+function handleArrObj(arr, property) {
+  const res = [];
+  const map = {};
+  for (const [idx, val] of arr.entries()) {
+    if (!map[val[property]]) {
+      res.push(val);
+      map[val[property]] = true;
+    }
+  }
+  return res;
+}

@@ -221,3 +221,37 @@ function pMap(list, mapper, concurrency = Infinity) {
     }
   });
 }
+
+/**
+ * 实现一个有并发限制的 promise 调度器
+ * @param {Promise[]} tasks 
+ * @param {number} limit 
+ * @returns 
+ */
+function scheduler(tasks, limit = 2) {
+  const res = [];
+  let currentIndex = 0;
+  let successCount = 0;
+  return new Promise((resolve, reject) => {
+    function next() {
+      const idx = currentIndex;
+      currentIndex++;
+      const currentTask = tasks[idx];
+      currentTask.then(val => {
+        successCount++;
+        res[idx] = val;
+        if (successCount === tasks.length) {
+          resolve(res);
+        }
+        if (currentIndex < tasks.length) {
+          next();
+        }
+      }).catch(err => {
+        reject(err);
+      });
+    }
+    for (let i = 0; i < limit && i < tasks.length; i++) {
+      next();
+    }
+  });
+}
