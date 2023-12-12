@@ -157,6 +157,28 @@ Promise.prototype.myFinally = function (callback) {
   });
 }
 
+// resolve 的实现
+Promise.prototype.myResolve = function (val) {
+  if (val instanceof Promise) {
+    return val;
+  }
+  return new Promise(resolve => {
+    resolve(value);
+  });
+}
+
+// reject 的实现
+Promise.prototype.myReject = function (reason) {
+  return new Promise((resolve, reject) => {
+    reject(reason);
+  });
+}
+
+// catch 的实现
+Promise.prototype.myCatch = function (onRejected) {
+  return this.then(null, onRejected);
+}
+
 const promise = new MyPromise((resolve, reject) => {
   console.log('test');
   setTimeout(res => {

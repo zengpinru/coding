@@ -27,3 +27,17 @@ function debounce(fn, delay = 1000, immediate = false) {
     }, delay);
   }
 }
+
+function debounce_1(fn, delay) {
+  let timer = null;
+  return function (...args) {
+    const context = this;
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      fn.apply(context, args);
+      timer = null;
+    }, delay);
+  };
+}

@@ -1,24 +1,59 @@
-function enNumToZhNum(nums) {
-  const str = String(nums);
-  const arr = str.split('').reverse();
-  const enNumMap = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
-  const unit = ['十', '百', '千', '万', '十', '百'];
-  let res = '';
-  let index = -1;
-  for (const [idx, val] of arr.entries()) {
-    const cur = enNumMap[val];
-    if (index === -1) {
-      res = cur + res; // 个位数
-    } else {
-      if (val === '1' && res.startsWith('十')) {
-        res = unit[index] + res;
-      } else {
-        res = val === '0' ? cur + res : cur + unit[index] + res;
+const chineseNumberChar = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+const chineseUnitSection = ['', '万', '亿', '万亿', '亿亿'];
+const chineseUnitChar = ['', '十', '百', '千'];
+
+function processFn(section) {
+  let strIns = '';
+  let chineseStr = '';
+  let unitPosition = 0;
+  let zero = true;
+
+  while (section > 0) {
+    const v = section % 10;
+
+    if (v === 0) {
+      if (!zero) {
+        zero = true;
+        chineseStr = chineseNumberChar[v] + chineseStr;
       }
+    } else {
+      zero = false;
+      strIns = chineseNumberChar[v];
+      strIns += chineseUnitChar[unitPosition];
+      chineseStr = strIns + chineseStr;
     }
-    index++;
+  
+    unitPosition++;
+    section = Math.floor(section / 10);
   }
-  return res.length > 1 ? res.replace(/零+$/, '') : res;
+
+  return chineseStr;
 }
 
-console.log(enNumToZhNum(1111000));
+/**
+ * 阿拉伯数字转中文数字
+ * @param {number} number
+ */
+function chineseNumber(num) {
+  // show me your code
+  if (num === 0) {
+    return chineseNumberChar[0];
+  }
+  let res = '';
+  let needZero = false;
+  let strIns = '';
+  let unitPosition = 0;
+  while (num > 0) {
+    const section = num % 10000;
+    if (needZero) {
+      res = chineseNumberChar[0] + res;
+    }
+    strIns = processFn(section);
+    strIns += (section !== 0) ? chineseUnitSection[unitPosition] : chineseUnitSection[0];
+    res = strIns + res;
+    needZero = section < 1000 && section > 0;
+    num = Math.floor(num / 10000);
+    unitPosition++;
+  }
+  return res;
+}
