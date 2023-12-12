@@ -1,17 +1,32 @@
-class Logger {
-  constructor() {
-    if (!Logger.instance) {
-      Logger.instance = this;
+// 实现一个单例模式的构造器
+function proxy(func) {
+  let instance = null;
+  return new Proxy(func, {
+    construct(target, ...args) {
+      if (!instance) {
+        instance = Reflect.construct(target, ...args);
+      }
+      return instance;
     }
-    return Logger.instance;
-  }
+  });
+}
+
+class Logger {
+  // constructor() {
+  //   if (!Logger.instance) {
+  //     Logger.instance = this;
+  //   }
+  //   return Logger.instance;
+  // }
   info() {
     console.log('info');
   }
 }
 
-const log1 = new Logger();
-const log2 = new Logger();
+const SingleLogger = proxy(Logger);
+
+const log1 = new SingleLogger();
+const log2 = new SingleLogger();
 
 console.log(log1 === log2);
 

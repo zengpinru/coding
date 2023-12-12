@@ -9,6 +9,15 @@ Array.prototype.myFlatMap = function (callback) {
   return newArray;
 }
 
+// 实现 map
+Array.prototype.myMap = function (callback) {
+  const res = [];
+  for (const [idx, val] of this.entries()) {
+    res[idx] = callback(val, idx, this);
+  }
+  return res;
+}
+
 // 实现 flat 函数
 Array.prototype.myFlat = function (depth = 1) {
   function process(arr, flag) {
@@ -27,6 +36,11 @@ Array.prototype.myFlat = function (depth = 1) {
     return res;
   }
   return process(this, depth);
+}
+
+// 实现 Array.of
+Array.myOf = function () {
+  return [].slice.call(arguments);
 }
 
 // 实现 reduce 函数
