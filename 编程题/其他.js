@@ -64,9 +64,13 @@ function sleep(time) {
  * @returns 
  */
 function numberThousands(number, thousandsSplitter = ',') {
+  const arr = String(number).split('.');
   const reverse = str => str.split('').reverse().join('');
-  const str = reverse(String(number)).replace(/(\d\d\d)(?=\d)/g, '$1' + thousandsSplitter);
-  return reverse(str);
+
+  // 小数点前面的数
+  arr[0] = reverse(reverse(arr[0]).replace(/(\d{3})(?=\d)/g, `$1${thousandsSplitter}`));
+
+  return arr.join('.');
 }
 
 /**
